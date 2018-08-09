@@ -1,0 +1,15 @@
+#! /usr/bin/python3
+
+import os
+import sys
+import subprocess
+
+from vdo.vdomgmnt import *
+
+conf = Configuration("/etc/vdoconf.yml")
+
+rdev = os.stat(sys.argv[1]).st_rdev
+
+for vdo in conf.getAllVdos().values():
+    if os.stat(vdo.device).st_rdev == rdev:
+        subprocess.check_call([ "vdo" ] + sys.argv[2:] + [ "--name", vdo.getName() ])
